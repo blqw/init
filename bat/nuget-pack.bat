@@ -11,19 +11,19 @@ if "%1"=="" (
 echo "■■■■■■■■■■■■■■■■■■■■■■ 编译完成 ■■■■■■■■■■■■■■■■■■■■■■"
 
 if "%1"=="" (
-	dotnet pack -c Debug -o %CD%\unpkgs
+	dotnet pack -o %CD%\unpkgs --no-build
 ) else (
-	dotnet pack -c Release -o %CD%\unpkgs
+	dotnet pack -o %CD%\unpkgs --no-build
 )
 echo "■■■■■■■■■■■■■■■■■■■■■■ 打包完成 ■■■■■■■■■■■■■■■■■■■■■■"
 for /r . %%a in (unpkgs\*.nupkg) do (
     if "%1"=="" (
         md "d:\appdata\nuget_local\"
-		echo "■■■■■■■■■■■■■■■■■■■■■■ 安装到本地 ■■■■■■■■■■■■■■■■■■■■■■"
+        echo "■■■■■■■■■■■■■■■■■■■■■■ 安装到本地 ■■■■■■■■■■■■■■■■■■■■■■"
         dotnet nuget push "%%a" -s "d:\appdata\nuget_local"
     ) else (
         dotnet nuget push "%%a" -s https://api.nuget.org/v3/index.json -k %1%
     )
 )
 echo "■■■■■■■■■■■■■■■■■■■■■■ 安装完成 ■■■■■■■■■■■■■■■■■■■■■■"
-del %CD%\unpkgs\*.nupkg
+del unpkgs /f /s /q
